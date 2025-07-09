@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8" />
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <!-- Estas lineas son para que funcione en GitHub -->
+    <link rel="stylesheet" href="https://librekcesar.github.io/busca_zipcodes4/leaflet-search-master/leaflet-search-master/src/leaflet-search.css" />
+    <script src="https://librekcesar.github.io/busca_zipcodes4/leaflet-search-master/leaflet-search-master/src/leaflet-search.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 900px;
+        }
+
+         #map-title {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            /* Asegúrate de que este background-color sea válido, rgba(r,g,b,a) */
+            background-color: rgba(255, 255, 255, 0.8); /* Ejemplo de blanco semitransparente */
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 25px;
+            z-index: 1000;
+        }
+
+        .leaflet-control-search {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+        
+#map-legend {
+        position: absolute;
+        bottom: 20px;
+        right: 1200px;
+        background: white;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        line-height: 1.5em;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+    }
+     /* Estilo para las líneas en la leyenda, ahora son rectángulos para líneas */
+        .legend-line-swatch {
+            width: 30px; /* Ancho para representar una línea */
+            height: 4px; /* Grosor de la línea */
+            display: inline-block;
+            margin-right: 5px;
+            vertical-align: middle;
+            border: 1px solid #333; /* Un pequeño borde para que se vea si el color es claro */
+        }
+
+         /* Estilo para los iconos de cuadrados personalizados */
+    .custom-square-icon {
+        /* Asegura que el divIcon sea un contenedor flexible */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+     /* Estilo para el triángulo como ícono */
+   
+    /* Para que apunte hacia arriba: */
+     .triangle-marker {
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 20px solid #dfdf11;
+    } 
+    </style>
+</head>
+<body>
+    <div id="map-title"> Rutas Media milla (Locales y foráneas)</div>
+    <div id="map"></div>
+    <div id="map-legend" class="legend">
+        <h4>Leyenda de Costo de Rutas</h4>
+        <div><span class="legend-line-swatch" style="background-color: #d8180c;"></span> Alto (Mayor a 95)</div>
+        <div><span class="legend-line-swatch" style="background-color: #c8a207;"></span> Medio (Mayor o igual a 17 y menor a 95)</div>
+        <div><span class="legend-line-swatch" style="background-color: #3fd80c;"></span> Bajo (Menor a 17)</div>
+        <div><span class="legend-line-swatch" style="background-color: #101298;"></span> Sin CPS</div>
+        <br>
+        <h4>Leyenda de Nivel de riesgo por Entidad</h4>
+        <div><span style="background-color: #d8180c; width: 20px; height: 20px; display: inline-block; border-radius: 50%;"></span> Nivel de riesgo de ruta (Alto)</div>
+        <div><span style="background-color: #c8a207; width: 20px; height: 20px; display: inline-block; border-radius: 50%;"></span> Nivel de riesgo de ruta (Medio) </div>
+        <div><span style="background-color: #3fd80c; width: 20px; height: 20px; display: inline-block; border-radius: 50%;"></span> Nivel de riesgo de ruta (Bajo) </div>
+    </div>
+
+    <!-- Descomentar este bloque de código en el github -->
+    <script src="https://unpkg.com/leaflet@1.3.0/dist/leaflet.js"></script>
+    <script src="https://librekcesar.github.io/busca_zipcodes4/leaflet-search-master/leaflet-search-master/src/leaflet-search.js"></script>
+    <script src="paradas_foraneas_copia.js"></script> <!-- GeoJSON de la primera capa de puntos -->
+    <script src="t_estacion_Origen_copia.js"></script>
+    <script src="t_estacion_Destino_copia.js"></script>
+    <script src="nombre_RUTA_GDL_CUL_SIN1_copia.js"></script> <!-- GeoJSON de la segunda capa de puntos -->
+    <script src="nombre_RUTA_GDL_TPQ_VLL_copia.js"></script> <!-- GeoJSON de la tercera capa de puntos -->
+    <script src="nombre_RUTA_MTY_CVM_TAM_copia.js"></script>
+    <script src="nombre_RUTA_MTY_REX_MAM_copia.js"></script>
+    <script src="nombre_RUTA_MTY1_XCOA1_XCOA2_copia.js"></script> 
+    <script src="nombre_RUTA_MX0_GTO2_AGU1_copia.js"></script>
+    <script src="nombre_RUTA_MX0_CV1_CV2_copia.js"></script>
+    <script src="nombre_RUTA_MX0_GDL1_simpl_copia.js"></script>
+    <script src="nombre_RUTA_MX0_MCH1_copia.js"></script>
+    <script src="nombre_RUTA_MX0_MTY1_copia.js"></script>
+    <script src="nombre_RUTA_MX0_QER1_QER2_copia.js"></script>
+    <script src="nombre_RUTA_MX0_SLP1_copia.js"></script>
+    <script src="nombre_RUTA_MX0_SPGR2_copia.js"></script>
+    <script src="nombre_RUTA_MX0_SPMX11_TLC1_copia.js"></script>
+    <script src="nombre_RUTA_MX0_SPPCH3_copia.js"></script>
+    <script src="nombre_RUTA_MX0_VER4_VER1_VER2_copia.js"></script>
+    <script src="nombre_RUTA_MX0_VER3_copia.js"></script>
+    <script src="nombre_RUTA_VSA1_CAM1_YUC1_copia.js"></script>
+    <script src="nombre_RUTA_MX0_VSA1_copia.js"></script>
+    <script src="nombre_RUTA_PB1_OAX1_copia.js"></script>
+    <script src="nombre_RUTA_SPYUC1_XCUN1_copia.js"></script>
+    <script src="nombre_RUTA_VER3_TGZ1_TGZ2_copia.js"></script>
+    <script src="nombre_RUTA_MX0_SPMX10_SPMX9_SPMX21_copia.js"></script>
+    <script src="nombre_RUTA_MX0_SPMX20_SPMX7_SPMX6_copia.js"></script>
+    <script src="nombre_MX0_SPMX15_SPMX3_SPMX23_SPMX14_copia.js"></script>
+    <script src="nombre_RUTA_MX0_SPMX18_SPMX17_SPMX22_copia.js"></script>
+    <script src="nombre_RUTA_MX0_SPMX19_copia.js"></script>
+    <script src="nombre_RUTA_MX0_SPMX5_SPMX1_SPMX2_copia.js"></script>
+    <script src="nombre_RUTA_MX0_SPMX13_copia.js"></script>
+    <script src="entidades_mex_simpl_copia.js"></script>
+
+
+    <script>
+    // Suponiendo que 'centroidemx4.js' define una variable 'cenmx4' con el GeoJSON de la primera capa de puntos
+    var puntos1 = pemex_spgr2;
+    // Suponiendo que 'puntos_geojson_2.js' define una variable 'puntos2' con el GeoJSON de la segunda capa de puntos
+    var puntos2 = origen;
+
+    var puntos3 = destino;
+    
+    // Suponiendo que 'lineas_geojson_1.js' define una variable 'lineas1' con el GeoJSON de la primera capa de líneas
+    var lineas1 = ruta_gdlcunsin;
+    // Suponiendo que 'lineas_geojson_2.js' define una variable 'lineas2' con el GeoJSON de la segunda capa de líneas
+    var lineas2 = ruta_gdltpqvll;
+    // Suponiendo que 'lineas_geojson_3.js' define una variable 'lineas3' con el GeoJSON de la tercera capa de líneas
+    var lineas3 = ruta_mtycvmmam;
+    var lineas4 = ruta_mty_rex_tam;
+    var lineas5 = ruta_mty_xcoas;
+    var lineas6 = ruta_mx0_agugto;
+    var lineas7 = ruta_mx0_cv12;
+    var lineas8 = ruta_mx0gdl;
+    var lineas9 = ruta_mx0mch;
+    var lineas10 = ruta_mx0mty;
+    var lineas11 = ruta_mx0_qer12;
+    var lineas12 = ruta_mx0_slp1;
+    var lineas13 = ruta_mx0spgr2;
+    var lineas14 = ruta_mx0spmx11tlc;
+    var lineas15 = ruta_mx0_sppch3;
+    var lineas16 = ruta_mx0_ver14;
+    var lineas17 = ruta_mx0ver3;
+    var lineas18 = ruta_mx0vsacam;
+    var lineas19 = ruta_mx0_vsa1;
+    var lineas20 = ruta_pb_oax;
+    var lineas21 = ruta_spyuc1_xcun;
+    var lineas22 = ruta_ver3_tgz;
+    var lineas23 = mx0spmx10921;
+    var lineas24 = mx0_spmx2076;
+    var lineas25 = mx0_spmx1532314;
+    var lineas26 = mx0_spmx181722;
+    var lineas27 = mx0_spmx19;
+    var lineas28 = mx0_spmx512;
+    var lineas29 = mx0_spmx13;
+
+
+    var poligono1 = mex;
+   
+     //
+    
+    //
+        function getColor(riesgo) {
+            switch (riesgo) {
+                case 'Alto': return '#d8180c';
+                case 'Medio': return '#c8a207';
+                case 'Bajo': return '#3fd80c';
+                default: return '#a08c8a';
+            }
+        }
+
+        function style(feature) {
+            return {
+                fillColor: getColor(feature.properties.riesgo),
+                weight: 1,
+                opacity: 1,
+                color: 'black',
+                dashArray: '2',
+                fillOpacity: 0.5
+            };
+        }
+
+        function onEachFeature(feature, layer) {
+            if (feature.properties) {
+                layer.bindPopup('<p> Estado: ' + feature.properties.NOM_ENT + '</p><p>Otro: ' + feature.properties.NOMGEO + '</p><p>Nivel de riesgo: ' + feature.properties.riesgo  + '</p><p>Localidad: ' + feature.properties.locality + '</p>');
+            }
+        }
+
+        var layerGroup = L.geoJSON(mex, {
+            style: style,
+            onEachFeature: onEachFeature
+        });
+
+
+    //
+    
+
+    // Crear el mapa centrado en una ubicación específica
+    var map = new L.Map('map', {zoom: 9, center: new L.latLng([19.46695, -99.13366]) });
+
+    // Añadir capa de tiles al mapa
+    map.addLayer(new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'));
+
+ // Función para crear capas de puntos con iconos personalizados
+function crearCapaPuntos(data, fillColor) {
+    return new L.GeoJSON(data, {
+        pointToLayer: function (feature, latlng) {
+            // Define un icono personalizado con CSS para que sea un cuadrado
+            var squareIcon = L.divIcon({
+                className: 'custom-square-icon', // Clase CSS para el estilo
+                iconSize: [20, 20],              // Tamaño del cuadrado (ancho, alto)
+                html: '<div style="background-color: ' + fillColor + '; border: 1px solid #040305; width: 100%; height: 100%;"></div>'
+            });
+
+            return L.marker(latlng, { icon: squareIcon });
+        },
+        onEachFeature: function (feature, layer) {
+            var popupContent = '<h4 style="color:' + (feature.properties.color || 'black') + '">' + // Agregué || 'black' para robustez
+                               'Nombre: ' + (feature.properties.Name || 'N/D') + '</h4>' +
+                               'Dirección: ' + (feature.properties.description || 'N/D') + '</h4>' + ' ' +
+                               'Otros: ' + (feature.properties.direccion || 'N/D');
+            layer.bindPopup(popupContent);
+        }
+    });
+}
+
+// Crear las capas de puntos
+var capaPuntos1 = crearCapaPuntos(puntos1, "#c40dbe");
+
+
+    //Segunda capa de puntos
+ function crearCapaPuntos2(data, fillColor) {
+        return new L.GeoJSON(data, {
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, {
+                    radius: 10,
+                    fillColor: fillColor,
+                    color: "#040305",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.7
+                });
+            },
+            onEachFeature: function (feature, layer) {
+                var popupContent = '<h4 style="color:' + feature.properties.color + '">' +
+                                   'Nombre de estación: ' + feature.properties.description + '</h4>' +
+                                   'Dirección: ' + feature.properties.Name + '</h4>' + ' ' +
+                                   'Tipo: ' + feature.properties.t_estacion;
+                layer.bindPopup(popupContent);
+            }
+        });
+    }
+
+    // Crear las capas de puntos
+    var capaPuntos2 = crearCapaPuntos2(puntos2, "#13eab9");
+
+
+    ////fin de segunda capa de puntos
+
+
+    ////Tercera capa de puntos: 
+  // Función para crear capas de puntos con íconos personalizados
+    function crearCapaPuntos3(data, fillColor) { // fillColor ahora se usará para el color del triángulo
+        return new L.GeoJSON(data, {
+            pointToLayer: function (feature, latlng) {
+                // Definir el estilo del triángulo dinámicamente usando el fillColor
+                var triangleHtml = `
+                    <div style="
+                        width: 0;
+                        height: 0;
+                        border-left: 10px solid transparent; /* Ancho de la base */
+                        border-right: 10px solid transparent; /* Ancho de la base */
+                        border-bottom: 20px solid ${fillColor}; /* Color y altura. Cambia a border-top si quieres que apunte hacia arriba */
+                    "></div>
+                `;
+
+                // Crear un L.divIcon
+                var triangleIcon = L.divIcon({
+                    className: '', // No necesitas una clase si el estilo está en línea
+                    html: triangleHtml,
+                    iconSize: [20, 20], // Tamaño del icono (ancho, alto) para que Leaflet lo centre correctamente
+                    iconAnchor: [10, 20] // Punto de anclaje del icono (X, Y) desde la esquina superior izquierda.
+                                        // Para un triángulo que apunta hacia arriba, sería [10, 0] o [10, 20] si es bottom
+                                        // Para un triángulo que apunta hacia abajo, sería [10, 20] (base)
+                                        // Prueba y ajusta este valor
+                });
+
+                // Devolver un marcador con el ícono personalizado
+                return L.marker(latlng, { icon: triangleIcon });
+            },
+            onEachFeature: function (feature, layer) {
+                var popupContent = '<h4 style="color:' + (feature.properties.color || 'black') + '">' +
+                                   'Nombre de Estación: ' + (feature.properties.description || 'N/D') + '</h4>' +
+                                   'Dirección: ' + (feature.properties.Name || 'N/D') + '</h4>' + ' ' +
+                                   'Tipo: ' + (feature.properties.t_estacion || 'N/D');
+                layer.bindPopup(popupContent);
+            }
+        });
+    }
+    // Crear las capas de puntos
+    var capaPuntos3 = crearCapaPuntos3(puntos3, "#1d13ea");
+
+
+    
+    
+
+    // Función para crear capas de líneas
+    function crearCapaLineas(data, fillColor) {
+        return new L.GeoJSON(data, {
+            style: function (feature) {
+                return {
+                    color: fillColor,
+                    weight: 6,
+                    opacity: 0.7
+                };
+            },
+            onEachFeature: function (feature, layer) {
+                var popupContent = '<h4>Información de la Ruta</h4>' + // Un título para el popup
+                               '<p><strong>Nombre de ruta:</strong> ' + (feature.properties.nombre || 'N/D') + '</p>' +
+                               '<p><strong>Tiempo de ruta:</strong> ' + (feature.properties.t_ruta || 'N/D') + '</p>' +
+                               '<p><strong>CPS promedio:</strong> ' + (feature.properties.CPS || 'N/D') + '</p>' +
+                               '<p><strong>Nivel de riesgo:</strong> ' + (feature.properties.t_riesgo || 'N/D') + '</p>';
+
+                layer.bindPopup(popupContent);
+            }
+        });
+    }
+
+    // Crear las capas de líneas
+    var capaLineas1 = crearCapaLineas(lineas1, "#c8a207"); //
+    var capaLineas2 = crearCapaLineas(lineas2, "#c8a207"); //
+    var capaLineas3 = crearCapaLineas(lineas3, "#101298"); //
+    var capaLineas4 = crearCapaLineas(lineas4, "#101298");
+    var capaLineas5 = crearCapaLineas(lineas5, "#3fd80c");
+    var capaLineas6 = crearCapaLineas(lineas6, "#3fd80c");
+    var capaLineas7 = crearCapaLineas(lineas7, "#3fd80c");
+    var capaLineas8 = crearCapaLineas(lineas8, "#3fd80c");
+    var capaLineas9 = crearCapaLineas(lineas9, "#3fd80c");
+    var capaLineas10 = crearCapaLineas(lineas10, "#3fd80c");
+    var capaLineas11 = crearCapaLineas(lineas11, "#3fd80c");
+    var capaLineas12 = crearCapaLineas(lineas12, "#3fd80c");
+    var capaLineas13 = crearCapaLineas(lineas13, "#c8a207"); //
+    var capaLineas14 = crearCapaLineas(lineas14, "#101298");
+    var capaLineas15 = crearCapaLineas(lineas15, "#3fd80c");
+    var capaLineas16 = crearCapaLineas(lineas16, "#3fd80c");
+    var capaLineas17 = crearCapaLineas(lineas17, "#d8180c"); //
+    var capaLineas18 = crearCapaLineas(lineas18, "#d8180c"); //
+    var capaLineas19 = crearCapaLineas(lineas19, "#3fd80c");
+    var capaLineas20 = crearCapaLineas(lineas20, "#3fd80c");
+    var capaLineas21 = crearCapaLineas(lineas21, "#3fd80c");
+    var capaLineas22 = crearCapaLineas(lineas22, "#101298");
+    var capaLineas23 = crearCapaLineas(lineas23, "#3fd80c");
+    var capaLineas24 = crearCapaLineas(lineas24, "#101298"); //
+    var capaLineas25 = crearCapaLineas(lineas25, "#101298"); //azul
+    var capaLineas26 = crearCapaLineas(lineas26, "#101298"); //
+    var capaLineas27 = crearCapaLineas(lineas27, "#3fd80c");
+    var capaLineas28 = crearCapaLineas(lineas28, "#3fd80c");
+    var capaLineas29 = crearCapaLineas(lineas29, "#3fd80c");
+   
+    
+
+    //////
+
+
+    ////
+   
+
+    // Añadir las capas al mapa
+    map.addLayer(capaPuntos1);
+    map.addLayer(capaPuntos2);
+    map.addLayer(capaPuntos3);
+   
+    map.addLayer(capaLineas1);
+    map.addLayer(capaLineas2);
+    map.addLayer(capaLineas3);
+    map.addLayer(capaLineas4);
+    map.addLayer(capaLineas5);
+    map.addLayer(capaLineas6);
+    map.addLayer(capaLineas7);
+    map.addLayer(capaLineas8);
+    map.addLayer(capaLineas9);
+    map.addLayer(capaLineas10);
+    map.addLayer(capaLineas11);
+    map.addLayer(capaLineas12);
+    map.addLayer(capaLineas13);
+    map.addLayer(capaLineas14);
+    map.addLayer(capaLineas15);
+    map.addLayer(capaLineas16);
+    map.addLayer(capaLineas17);
+    map.addLayer(capaLineas18);
+    map.addLayer(capaLineas19);
+    map.addLayer(capaLineas20);
+    map.addLayer(capaLineas21);
+    map.addLayer(capaLineas22);
+    map.addLayer(capaLineas23);
+    map.addLayer(capaLineas24);
+    map.addLayer(capaLineas25);
+    map.addLayer(capaLineas26);
+    map.addLayer(capaLineas27);
+    map.addLayer(capaLineas28);
+    map.addLayer(capaLineas29);
+    
+
+    // Añadir control de capas
+    var overlays = {
+        "Paradas seguras": capaPuntos1,
+        "Estaciones origen": capaPuntos2,
+        "Estaciones destino": capaPuntos3,
+        "Ruta GDL-CUL1-SIN1": capaLineas1,
+        "Ruta GDL-XTPQ1-VLL": capaLineas2,
+        "Ruta MTY1-XCVM1-XTAM": capaLineas3,
+        "Ruta MTY1-XREX1-MAM1": capaLineas4,
+        "Ruta MTY1-XCOA1-XCOA2": capaLineas5,
+        "Ruta MX0-AGU1-GTO": capaLineas6,
+        "Ruta MX0-CV1-CV2": capaLineas7,
+        "Ruta MX0-GDL1": capaLineas8, 
+        "Ruta MX0-MCH1": capaLineas9,
+        "Ruta MX0-MTY1": capaLineas10,
+        "Ruta MX0-QER1-QER2": capaLineas11,
+        "Ruta MX0-SLP1": capaLineas12, 
+        "Ruta MX0-SPGR2": capaLineas13, 
+        "Ruta MX0-SPMX11-TLC1": capaLineas14, 
+        "Ruta MX0-SPPCH3": capaLineas15, 
+        "Ruta MX0-VER1-VER2-VER4": capaLineas16, 
+        "Ruta MX0-VER3": capaLineas17, 
+        "Ruta VSA1-SPCAM1-SPYUC1": capaLineas18, 
+        "Ruta MX0-VSA1": capaLineas19, 
+        "Ruta PB1-OAX1": capaLineas20, 
+        "Ruta SPYUC1-XCUN1": capaLineas21, 
+        "Ruta VER3-TGZ1-TGZ2": capaLineas22,
+        "Ruta MX0-SPMX10-SPMX9-SPMX21":capaLineas23,
+        "Ruta MX0-SPMX20-SPMX7-SPMX6":capaLineas24,
+        "Ruta MX0-SPMX15-SPMX3-SPMX23-SPMX14":capaLineas25,
+        "Ruta MX0-SPMX18-SPMX17-SPMX22":capaLineas26,
+        "Ruta MX0-SPMX19":capaLineas27,
+        "Ruta MX0-SPMX5-SPMX1-SPMX2":capaLineas28,
+        "Ruta MX0-SPMX13":capaLineas29,
+        "Nivel de riesgo por municipio": layerGroup
+        
+       
+    };
+
+    L.control.layers(null, overlays, {collapsed: false}).addTo(map);
+    </script>
+</body>
+</html>

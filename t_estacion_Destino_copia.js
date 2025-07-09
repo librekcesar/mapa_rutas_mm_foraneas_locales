@@ -1,0 +1,33 @@
+var destino = {
+"type": "FeatureCollection",
+"name": "t_estacion_Destino",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "RG5X+M4V, Culiacán, Sinaloa", "description": "SIN1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -107.4522006, 24.8092373, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "6HMM+PWG, Mazatlán, Sinaloa", "description": "CUL1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -106.4151601, 23.2343537, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "F4M9+FH3, Tepic, Nayarit", "description": "X_TPQ1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -104.8810561, 21.4835833, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Manuel Corona 460A, Morelos y Pavón, 48290 Puerto Vallarta, Jal.", "description": "SPVLL1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -105.2128674, 20.6674134, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "PVWV+P66, Ciudad Victoria, Tamaulipas", "description": "CVM1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -99.1069005, 23.7468292, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Rubi 115, Gemma, 89368 Tampico, Tamps.", "description": "TAM1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -97.8782456, 22.2849495, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Nte. 1 190", "description": "XREX1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -98.3266874, 26.0661423, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Circón 32", "description": "MAM1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -97.5228973, 25.8492861, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Blvd. Vito Alessio Robles 2075, Sin Nombre de Col 25, 25023 Saltillo, Coah.", "description": "XCOA1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -101.0049366, 25.4507053, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Av Morelos 703, Primero de Cobián Centro, 27000 Torreón, Coah.", "description": "XCOA2", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -103.4569511, 25.5393478, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "18.851778543817353, -99.1973140215011", "description": "CV2", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -99.1971064, 18.8517632, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "GTO2", "description": "GTO2", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -101.6429219, 21.1525125, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "AGU1", "description": "AGU1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -102.2330488, 21.8641428, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "19.68478355791596, -101.26951672866319", "description": "MCH1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -101.2695381, 19.684747, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "16.863494450969302, -99.91153714230562", "description": "SPGR2", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -99.9114116, 16.863512, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "22.13720977627198, -100.96040075767105", "description": "SLP1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -100.960413, 22.137222, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "20.06610523469825, -98.76383983408488", "description": "SPPCH3", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -98.7638414, 20.0661229, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "19.380693063674357, -99.28782993075704", "description": "SPMX11", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -99.2878332, 19.380694, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "C Jorullo 42, Aguacatal, 91133 Xalapa-Enríquez, Ver., México", "description": "VER4", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -96.9228372, 19.5430802, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Art 127 Constitucional 3935, Frutos de la Revolucion, 96470 Coatzacoalcos, Ver., México", "description": "VER3", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -94.425503, 18.1303959, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Cto. Sur 1 20-32, El Rosario, El Rosario, Oax., México", "description": "OAX1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -96.6900198, 17.042826, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Av. 135 Supermanzana 99, 77536 Cancún, Q.R.", "description": "XCUN1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -86.8773325, 21.1432876, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Calle 1a. Pte. Nte. 793, Colón, 29037 Tuxtla Gutiérrez, Chis.", "description": "TGZ1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -93.1158291, 16.7601904, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "C. Miguel Hidalgo y Costilla 245, Tamulte de las Barrancas, 86150 Villahermosa, Tab.", "description": "VSA1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -92.956401, 17.9701173, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Av. Antigua Kalá 6, Zona Sin Asignación de Nombre, 24087 San Francisco de Campeche, Camp.", "description": "SPCAM1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -90.4913601, 19.8526316, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Kanasín, Yucatán", "description": "SPYUC1", "t_estacion": "Destino" }, "geometry": { "type": "Point", "coordinates": [ -89.5639005, 20.944148, 0.0 ] } }
+]
+}
